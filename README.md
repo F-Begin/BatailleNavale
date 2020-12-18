@@ -50,7 +50,7 @@ L'utilisateur recevra alors cela et le traitera en local pour renvoyer un répon
 Exemple objet pour une connexion (Réponse) :
 ObjetReponse {
   String Type : "Connexion"
-  ArrayList<Strig> = {Identifiant;MotDePasseMD5}
+  ArrayList<String> Args = {Identifiant;MotDePasseMD5}
 }
   
 Exemple String pour une connexion (Réponse) :
