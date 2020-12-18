@@ -15,7 +15,11 @@ public class ListeningThread extends Thread{
 		in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		scan = new Scanner(in);
 	}
-	
+	/*
+	 * Thread de base pour l'affichage des messages recu du serveur
+	 * 
+	 * On utilise un Scanner pour attendre les nouveaux messages plutot qu'envoyer "null" en boucle lorsque le serveur ne communique pas.
+	 */
 	public void run(){
 		while (true) {
 			try {

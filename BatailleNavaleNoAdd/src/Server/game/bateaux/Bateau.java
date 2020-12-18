@@ -10,6 +10,15 @@ public class Bateau {
 	private FacingDirection direction;
 	
 	public Bateau() {}
+	
+	/*
+	 * Cette objet represente un bateau de base
+	 * Les methodes sont les Getters et Setters habituels
+	 * 
+	 * Le parametres state d'un bateau n'est pas encore utilisé par le programme mais le serra à l'avenir pour pouvoir ajouter l'indication qu'un bateau est "coulé"
+	 * 
+	 * Les bateaux sont différenciés en plusieurs types dans les classe presente dans le package Server.game.bateaux.types
+	 */
 
 	public int getLenght() {
 		return lenght;

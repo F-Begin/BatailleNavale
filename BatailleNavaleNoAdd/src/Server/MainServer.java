@@ -16,15 +16,23 @@ import Server.gestion.ThreadGestion;
  */
 
 public class MainServer {
-	static ArrayList<User> indexJoueur = new ArrayList<User>();
-	static User newUser;
+	static ArrayList<User> indexJoueur = new ArrayList<User>(); //Liste des joueurs connectés
+	static User newUser; //Variable temporaire pour supporter une nouvelle connexion
+	
+	/*
+	 * Le main ici va juste accepter les connexions et les envoyers dans des Thread Lobby
+	 * D'abord ont configure le port sur lequel on va ecouter
+	 * Ensuite la variable id permet de compter les utilisateurs ne jamais avoir deux utilisateurs avec le meme ID
+	 * Ensuite on démarre le ThreadGestion
+	 * Ensuite on demarre la boucle qui va s'occuper d'accepter les joueurs et les envoyers dans les Thread Lobby en les ajoutant dans la liste de joueur définit plus haut
+	 */
 	public static void main(String[] args) {
 		try {
 			@SuppressWarnings("resource")
 			ServerSocket ecoute = new ServerSocket(1500);
 			System.out.println("Serveur lancÃ©!");
 			int id=0;	
-			new ThreadGestion().run();;
+			new ThreadGestion().start();;
 			System.out.println("Thread de gestion démaré !");
 			while(true) {
 				Socket client = ecoute.accept();
@@ -39,7 +47,10 @@ public class MainServer {
 		// Traitement dï¿½erreur
 		}
 }
-
+ 
+	/*
+	 * Methode qui permet de recuperer la liste des joueurs connecté depuis les autres Thread nottament
+	 */
 public static ArrayList<User> getIndexJoueur() {
 	return indexJoueur;
 }

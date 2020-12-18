@@ -1,5 +1,9 @@
 package Server.utils;
 
+/*
+ * Enum pour l'etat des clients et définir des toString() associé (Utilisé dans le Thread Lobby)
+ */
+
 public enum ClientState {
 	ATTENTE(){
 		@Override

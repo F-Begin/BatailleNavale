@@ -11,6 +11,13 @@ import Server.utils.ClientState;
 import Server.utils.User;
 
 public class GameStartTimer extends TimerTask{
+	/*
+	 * Le GameStartTimer est une Task qui va etre démarré toutes les dix secondes par le Thread Gestion
+	 * 
+	 * Cette task va juste recupérer la liste des joueurs connecté et mettre dans des parties chaque binome de joueur en recherche.
+	 * 
+	 * Les binome de joueur qui leur ThreadLobby qui est detruit et rejoigne un ThreadGame (A la difference des ThreadLobby, un ThreadGame = 2 joueurs)
+	 */
 	ArrayList<User> indexJoueur = new ArrayList<User>();
 	User temp;
 	@SuppressWarnings("deprecation")

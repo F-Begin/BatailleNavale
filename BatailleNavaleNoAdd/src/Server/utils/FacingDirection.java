@@ -1,5 +1,9 @@
 package Server.utils;
 
+/*
+ * Enum simplement pour la direction des bateaux
+ */
+
 public enum FacingDirection {
 	NORTH() {},
 	SOUTH() {},

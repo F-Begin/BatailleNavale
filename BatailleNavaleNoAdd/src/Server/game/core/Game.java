@@ -9,6 +9,13 @@ import Server.game.player.Player;
 import Server.utils.FacingDirection;
 import Server.utils.WrongPlacementException;
 
+/*
+ * Objet le plus important, celui qui represente litteralement une partie
+ * 
+ * Il prends donc en parametre les deux joueurs, et leurs bufferedReader et leur PrintWritter, et enfin, un Scanner
+ * 
+ * Et l'objet possede beaucoup de methodes customs qui sont expliqués et aussi des Getters et Setters habituels
+ */
 public class Game {
 	private Player j1;
 	private Player j2;
@@ -19,6 +26,9 @@ public class Game {
 	private Scanner scan;
 	
 	public Game(Player j1, Player j2) {
+		/*
+		 * Initialisation des arguments de l'objet Game
+		 */
 		
 		this.j1 = j1;
 		this.j2 = j2;
@@ -28,7 +38,9 @@ public class Game {
 		this.j2out = j2.getJOut();
 		this.initialize();
 	}
-
+	/*
+	 * Cette methode va initialiser la partie en faisant placer les bateau au joueur 1 puis au 2 en appelant la methode playerInitialize(Player)
+	 */
 	public void initialize() {
 		this.j1out.println("Vous devez placer vos bateaux...");
 		this.j2out.println("Le joueur 1 place ses bateaux...");
@@ -40,6 +52,19 @@ public class Game {
 		this.gamePlaying(this.j1, this.j2);
 	}
 	
+	/*
+	 * Cette methode est la derniere a etre appelé dans le code de la Game, il s'agit de la partie en elle meme
+	 * En realite ce n'est qu'une boucle while(!finish), finish etant un boolean = true si la partie est finit et = false si non
+	 * 
+	 * Il y a un compteur de tour, les tours pairs le joueur 1 joue et les tour impair le joueur 2 joue
+	 * 
+	 * Pour chaque tour, d'abord on demande au joueur les coordonnés de l'attque, et cette demande est dans une boucle while(!legitPos) legitPos etant un boolean qui devient true
+	 * uniquement lorsque les coordonnées donné par l'utilisateur seront correctes (Lorsque la methode fire() ne renverra pas d'exception donc)
+	 * 
+	 * Ensuite la methode fire renvoie un boolean etant true si le joueur a gagné suite a son attaque et false sinon
+	 * 
+	 * Si ce boolean est true, le winner est definit sur le joueur gagnant, et finish = true, nous quittons donc la boucle et arrivont a la toute fin où le gagnant est annoncé au deux joueurs.
+	 */
 	public void gamePlaying(Player j1, Player j2) {
 		int turn = 1;
 		boolean finish = false;
@@ -59,14 +84,14 @@ public class Game {
 				while(!legitPos) {
 					try {
 						firePos = scan.nextLine();
+						if(this.fire(Integer.parseInt(firePos.split("")[0]), Integer.parseInt(firePos.split("")[1]), j1, j2)) {
+							finish=true;
+							winner = j1;
+						}
 						legitPos = true;
 					}catch(Exception e) {
-						e.printStackTrace();
+						this.j1out.println("Coordonnées incorrecte !");
 					}
-				}
-				if(this.fire(Integer.parseInt(firePos.split("")[0]), Integer.parseInt(firePos.split("")[1]), j1, j2)) {
-					finish=true;
-					winner = j1;
 				}
 				legitPos = false;
 				turn++;
@@ -83,14 +108,14 @@ public class Game {
 				while(!legitPos) {
 					try {
 						firePos = scan.nextLine();
+						if(this.fire(Integer.parseInt(firePos.split("")[0]), Integer.parseInt(firePos.split("")[1]), j2, j1)) {
+							finish=true;
+							winner = j2;
+						}
 						legitPos = true;
 					}catch(Exception e) {
-						e.printStackTrace();
+						this.j2out.println("Coordonnés incorrecte !");
 					}
-				}
-				if(this.fire(Integer.parseInt(firePos.split("")[0]), Integer.parseInt(firePos.split("")[1]), j2, j1)) {
-					finish=true;
-					winner = j2;
 				}
 				legitPos = false;
 				turn++;
@@ -102,7 +127,15 @@ public class Game {
 			this.sayToBoth("Le grand gagnant est le joueur "+j2.getUser().getId()+"!");
 		this.sayToBoth("Merci d'avoir joué !");
 	}
-	
+	/*
+	 * Cette methode gère l'attque du joueur en utilisant la methode isSomethingThere de l'objet Grid
+	 * 
+	 * Si le joueur touche, cela est annoncé, les Grid et les VisualGrid sont actualisé et on appelle la methode check, si check renvoie 0 alors le boolean win est definit sur true
+	 * 
+	 * Si le joueur ne touche pas, cela est annoncé, les VisualGrid sont actualisé (Les grid n'ont pas besoin de l'etre) et check n'est pas non plus appelé
+	 * 
+	 * Enfin on renvoie la valeur du boolean win qui est definit sur false par defaut
+	 */
 	public boolean fire(int x, int y, Player attaque, Player p) {
 		boolean win = false;
 		if(p.getGrid().isSomethingThere(x, y)) {
@@ -126,6 +159,11 @@ public class Game {
 		return win;
 	}
 	
+	/*
+	 * Cette methode renvoie le nombre de case ayant pour valeur True dans la Grid d'un joueur, c'est donc pour cela que nous verifions que la valeur = 0 dans la methode fire
+	 * 
+	 * Car si count renvoie 0 cela signifie que le joueur n'a plus de bateau, et donc que le joueur attaquant a gagné a la suite de son attaque
+	 */
 	public int check(Player p) {
 		int count = 0;
 		for(int x = 0; x<10; x++) {
@@ -137,11 +175,20 @@ public class Game {
 		return count;
 	}
 	
+	/*
+	 * Methode purement pour se simplifier la vie, envoie le message en parametre au deux joueurs 
+	 */
 	public void sayToBoth(String message) {
 		this.j1out.println(message);
 		this.j2out.println(message);
 	}
 	
+	/*
+	 * Cette methode n'est qu'un boucle qui va demander au joueur de placer ses bateaux un par un 
+	 * 
+	 * Si le joueur donne les mauvaises coordonnées lors d'un placement cela renverra une WrondPlacementException ou une NumberFormatException et il lui sera
+	 * redemander de donner des coordonnées pour ledit bateau
+	 */
 	public void playerInitialize(Player j) {
 		this.scan = new Scanner(j.getJIn());
 		for (Bateau bateau : j.getSbateau().getListBateau()) {

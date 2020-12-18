@@ -10,6 +10,13 @@ import Server.game.grid.VisualGrid;
 import Server.utils.User;
 
 public class Player {
+	
+	/*
+	 * Les objets players sont les objets qui vont etre utilisé pour représenter un joueur au sein d'une partie
+	 * Ils sont crée a partir des Objets Custom User, Grid, VisualGrid, SetBateau...
+	 * 
+	 * Nous utilisons les Getters et Setters habituels
+	 */
 	private Grid grid;
 	private VisualGrid vgrid;
 	

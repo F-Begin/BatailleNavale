@@ -15,8 +15,20 @@ public class ThreadLobby extends Thread{
 	BufferedReader in;
 	PrintWriter out;
 	
+	/*
+	 * Ceci est le Thread dans lequel l'utilisateur est envoyé après s'être connectée
+	 */
+	
 	public ThreadLobby(User user) {
 		try {
+			/*
+			 * Définition des attributs du ThreadLobby
+			 * user = L'utilisateur dans le Lobby
+			 * in = Son stream d'entrée
+			 * out = Son stream de sortie
+			 * 
+			 * Ensuit on affiches les messages de bienvenue
+			 */
 			this.user = user;
 			in = new BufferedReader(new InputStreamReader(user.getSocket().getInputStream()));
 			out = new PrintWriter(user.getSocket().getOutputStream(), true);
@@ -29,16 +41,24 @@ public class ThreadLobby extends Thread{
 	}
 	
 	@SuppressWarnings("deprecation")
-	public synchronized void run() {
+	public void run() {
+		//Scanner de l'utilisateur
 		Scanner scanner = new Scanner(this.in);
 		try {
 			while(true) {
+				/*
+				 * Boucle dans laquelle l'utilisateur peut lancer et annuler une recherche de partie
+				 * 
+				 * Le switch permet de recup la reponse de l'utilisateur
+				 * 
+				 * De plus, les exceptions sont gérées si l'utilisateur écrit n'importe quoi
+				 */
 				out.println("1 : Chercher une partie / Cesser de chercher.");
 				out.println("2 : Quitter.");
 				if(!this.user.getState().equals(Server.utils.ClientState.PARTIE)) {
-					int answer = scanner.nextInt();
+					String answer = scanner.nextLine();
 					switch(answer) {
-					case 1:
+					case "1":
 						if(this.user.getState() == Server.utils.ClientState.AFK) {
 							this.user.setState(Server.utils.ClientState.ATTENTE);
 							out.println("Nouveau status définis sur : "+user.getState());
@@ -51,7 +71,7 @@ public class ThreadLobby extends Thread{
 							out.println("Pas de changement pour une raison obscure ...?");
 						}
 						break;
-					case 2:
+					case "2":
 						scanner.close();
 						MainServer.getIndexJoueur().remove(MainServer.getIndexJoueur().indexOf(this.user));
 						this.stop();
